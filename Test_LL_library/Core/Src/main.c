@@ -32,9 +32,11 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 #define bitRead(value, bit) (((value) >> (bit)) & 0x01)
-//#define SYSTICKCLOCK 120000000ULL
-//#define SYSTICKCLOCK 64000000ULL
-//#define SYSTICKPERUS (SYSTICKCLOCK / 1000000UL)
+#define ROWS 8
+#define COLS 8
+
+
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -59,6 +61,7 @@ void UART2_TX_string(char* str);
 static void inline delay_us(unsigned int delay);
 void write_serial_in_parallel_out_register_plus(unsigned char data);
 void write_serial_in_parallel_out_register_minus(unsigned char data);
+unsigned char rowToBinary(unsigned char (*ptr)[8], int row);
 void led_serial_in_parallel_out_example_1(void);
 void heart_example_1(void);
 void heart_example_2(void);
@@ -116,6 +119,16 @@ int main(void)
   int count=0;
   char buffer_[15];
   char buffer_2[15];
+  unsigned char dotMatrixBoard[ROWS][COLS] = {
+		  {1, 1, 1, 1, 1, 1, 1, 1},
+		  {1, 1, 1, 1, 1, 1, 1, 1},
+		  {1, 1, 1, 1, 1, 1, 1, 1},
+		  {1, 1, 1, 1, 1, 1, 1, 1},
+		  {1, 1, 1, 1, 1, 1, 1, 1},
+		  {1, 1, 1, 1, 1, 1, 1, 1},
+		  {1, 1, 1, 1, 1, 1, 1, 1},
+		  {1, 1, 1, 1, 1, 1, 1, 1}
+  };
   //write_serial_in_parallel_out_register(data_8bit_ex12);
 //  write_serial_in_parallel_out_register_minus(0b10011001);
 //  write_serial_in_parallel_out_register_plus(0b01000000);
@@ -131,8 +144,9 @@ int main(void)
 
 
 
-
-
+  /* choose to which to Off color */
+  write_serial_in_parallel_out_register_minus_red(0b11111111);
+  //write_serial_in_parallel_out_register_minus_yellow(0b11111111);
 
   /* USER CODE END 2 */
 
@@ -143,36 +157,44 @@ int main(void)
 
 	  //row:0
 	  write_serial_in_parallel_out_register_plus(0b10000000);
-	  write_serial_in_parallel_out_register_minus_yellow(0b11000011);
-	  LL_mDelay(2);
+	  write_serial_in_parallel_out_register_minus_yellow(rowToBinary(dotMatrixBoard, 0));
+	  //write_serial_in_parallel_out_register_minus_red(rowToBinary(dotMatrixBoard, 0));
+	  LL_mDelay(1);
 	  //row:1
 	  write_serial_in_parallel_out_register_plus(0b01000000);
-	  write_serial_in_parallel_out_register_minus_yellow(0b10111101);
-	  LL_mDelay(2);
+	  write_serial_in_parallel_out_register_minus_yellow(rowToBinary(dotMatrixBoard, 1));
+	  //write_serial_in_parallel_out_register_minus_red(rowToBinary(dotMatrixBoard, 1));
+	  LL_mDelay(1);
 	  //row:2
 	  write_serial_in_parallel_out_register_plus(0b00100000);
-	  write_serial_in_parallel_out_register_minus_yellow(0b01011010);
-	  LL_mDelay(2);
+	  write_serial_in_parallel_out_register_minus_yellow(rowToBinary(dotMatrixBoard, 2));
+	  //write_serial_in_parallel_out_register_minus_red(rowToBinary(dotMatrixBoard, 2));
+	  LL_mDelay(1);
 	  //row:3
 	  write_serial_in_parallel_out_register_plus(0b00010000);
-	  write_serial_in_parallel_out_register_minus_yellow(0b01111110);
-	  LL_mDelay(2);
+	  write_serial_in_parallel_out_register_minus_yellow(rowToBinary(dotMatrixBoard, 3));
+	  //write_serial_in_parallel_out_register_minus_red(rowToBinary(dotMatrixBoard, 3));
+	  LL_mDelay(1);
 	  //row:4
 	  write_serial_in_parallel_out_register_plus(0b00001000);
-	  write_serial_in_parallel_out_register_minus_yellow(0b01011010);
-	  LL_mDelay(2);
+	  write_serial_in_parallel_out_register_minus_yellow(rowToBinary(dotMatrixBoard, 4));
+	  //write_serial_in_parallel_out_register_minus_red(rowToBinary(dotMatrixBoard, 4));
+	  LL_mDelay(1);
 	  //row:5
 	  write_serial_in_parallel_out_register_plus(0b00000100);
-	  write_serial_in_parallel_out_register_minus_yellow(0b01100110);
-	  LL_mDelay(2);
+	  write_serial_in_parallel_out_register_minus_yellow(rowToBinary(dotMatrixBoard, 5));
+	  //write_serial_in_parallel_out_register_minus_red(rowToBinary(dotMatrixBoard, 5));
+	  LL_mDelay(1);
 	  //row:6
 	  write_serial_in_parallel_out_register_plus(0b00000010);
-	  write_serial_in_parallel_out_register_minus_yellow(0b10111101);
-	  LL_mDelay(2);
+	  write_serial_in_parallel_out_register_minus_yellow(rowToBinary(dotMatrixBoard, 6));
+	  //write_serial_in_parallel_out_register_minus_red(rowToBinary(dotMatrixBoard, 6));
+	  LL_mDelay(1);
 	  //row:7
 	  write_serial_in_parallel_out_register_plus(0b00000001);
-	  write_serial_in_parallel_out_register_minus_yellow(0b11000011);
-	  LL_mDelay(2);
+	  write_serial_in_parallel_out_register_minus_yellow(rowToBinary(dotMatrixBoard, 7));
+	  //write_serial_in_parallel_out_register_minus_red(rowToBinary(dotMatrixBoard, 7));
+	  LL_mDelay(1);
 
 
 //	  sprintf(buffer_, "%d", count);
@@ -1229,17 +1251,15 @@ void write_serial_in_parallel_out_register_minus_red(unsigned char data){
 }
 
 
+unsigned char rowToBinary(unsigned char (*ptr)[8], int row) {
+	unsigned char binaryValue = 0;
+	for (int col = 0; col < COLS; col++) {
+		binaryValue |= (ptr[row][col] << (COLS - 1 - col));
+	}
+	binaryValue = ~binaryValue;
 
-
-
-
-
-
-
-
-
-
-
+	return binaryValue;
+}
 
 
 static void inline delay_us(unsigned int delay){

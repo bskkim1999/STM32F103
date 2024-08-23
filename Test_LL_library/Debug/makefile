@@ -60,8 +60,8 @@ all: main-build
 main-build: Test_LL_library.elf secondary-outputs
 
 # Tool invocations
-Test_LL_library.elf Test_LL_library.map: $(OBJS) $(USER_OBJS) C:\Users\step\Desktop\Test_LL_library\STM32F103RBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Test_LL_library.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\step\Desktop\Test_LL_library\STM32F103RBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Test_LL_library.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Test_LL_library.elf Test_LL_library.map: $(OBJS) $(USER_OBJS) C:\Users\step\Desktop\TEST_folder\STM32F103RB\STM32F103\Test_LL_library\STM32F103RBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Test_LL_library.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\step\Desktop\TEST_folder\STM32F103RB\STM32F103\Test_LL_library\STM32F103RBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Test_LL_library.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
