@@ -31,9 +31,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define bitRead(value, bit) (((value) >> (bit)) & 0x01)
-#define ROWS 8
-#define COLS 8
+
 
 
 
@@ -47,7 +45,29 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+unsigned char dotMatrixBoard_yellow[ROWS][COLS] = {
+		  {1, 1, 0, 0, 0, 0, 1, 1},
+		  {1, 1, 0, 0, 0, 0, 1, 1},
+		  {0, 0, 1, 0, 0, 0, 0, 0},
+		  {0, 0, 0, 0, 0, 0, 0, 1},
+		  {0, 0, 0, 0, 0, 0, 0, 0},
+		  {0, 0, 0, 0, 0, 0, 0, 0},
+		  {0, 0, 0, 0, 0, 0, 0, 0},
+		  {0, 0, 0, 0, 0, 0, 0, 0}
+  };
+  unsigned char dotMatrixBoard_red[ROWS][COLS] = {
+  		  {0, 0, 0, 0, 0, 0, 0, 0},
+  		  {0, 0, 0, 0, 0, 0, 0, 0},
+  		  {0, 0, 1, 0, 0, 0, 0, 0},
+  		  {0, 0, 0, 0, 0, 0, 0, 0},
+  		  {0, 0, 0, 0, 0, 0, 0, 1},
+  		  {0, 0, 0, 0, 0, 0, 0, 0},
+  		  {1, 1, 0, 0, 0, 0, 1, 0},
+  		  {1, 1, 0, 0, 0, 0, 1, 1}
+    };
 
+  int next_yellow_yes = 0;
+  int next_red_yes=0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -56,17 +76,7 @@ static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
-void led_blink_example_code(void);
-void UART2_TX_string(char* str);
-static void inline delay_us(unsigned int delay);
-void write_serial_in_parallel_out_register_plus(unsigned char data);
-void write_serial_in_parallel_out_register_minus(unsigned char data);
-unsigned char rowToBinary(unsigned char (*ptr)[8], int row);
-void led_serial_in_parallel_out_example_1(void);
-void heart_example_1(void);
-void heart_example_2(void);
-void heart_example_3(void);
-void heart_example_4(void);
+
 
 /* USER CODE END PFP */
 
@@ -119,16 +129,7 @@ int main(void)
   int count=0;
   char buffer_[15];
   char buffer_2[15];
-  unsigned char dotMatrixBoard[ROWS][COLS] = {
-		  {1, 1, 1, 1, 1, 1, 1, 1},
-		  {1, 1, 1, 1, 1, 1, 1, 1},
-		  {1, 1, 1, 1, 1, 1, 1, 1},
-		  {1, 1, 1, 1, 1, 1, 1, 1},
-		  {1, 1, 1, 1, 1, 1, 1, 1},
-		  {1, 1, 1, 1, 1, 1, 1, 1},
-		  {1, 1, 1, 1, 1, 1, 1, 1},
-		  {1, 1, 1, 1, 1, 1, 1, 1}
-  };
+
   //write_serial_in_parallel_out_register(data_8bit_ex12);
 //  write_serial_in_parallel_out_register_minus(0b10011001);
 //  write_serial_in_parallel_out_register_plus(0b01000000);
@@ -145,7 +146,7 @@ int main(void)
 
 
   /* choose to which to Off color */
-  write_serial_in_parallel_out_register_minus_red(0b11111111);
+  //write_serial_in_parallel_out_register_minus_red(0b11111111);
   //write_serial_in_parallel_out_register_minus_yellow(0b11111111);
 
   /* USER CODE END 2 */
@@ -157,43 +158,43 @@ int main(void)
 
 	  //row:0
 	  write_serial_in_parallel_out_register_plus(0b10000000);
-	  write_serial_in_parallel_out_register_minus_yellow(rowToBinary(dotMatrixBoard, 0));
-	  //write_serial_in_parallel_out_register_minus_red(rowToBinary(dotMatrixBoard, 0));
+	  write_serial_in_parallel_out_register_minus_yellow(rowToBinary(dotMatrixBoard_yellow, 0));
+	  write_serial_in_parallel_out_register_minus_red(rowToBinary(dotMatrixBoard_red, 0));
 	  LL_mDelay(1);
 	  //row:1
 	  write_serial_in_parallel_out_register_plus(0b01000000);
-	  write_serial_in_parallel_out_register_minus_yellow(rowToBinary(dotMatrixBoard, 1));
-	  //write_serial_in_parallel_out_register_minus_red(rowToBinary(dotMatrixBoard, 1));
+	  write_serial_in_parallel_out_register_minus_yellow(rowToBinary(dotMatrixBoard_yellow, 1));
+	  write_serial_in_parallel_out_register_minus_red(rowToBinary(dotMatrixBoard_red, 1));
 	  LL_mDelay(1);
 	  //row:2
 	  write_serial_in_parallel_out_register_plus(0b00100000);
-	  write_serial_in_parallel_out_register_minus_yellow(rowToBinary(dotMatrixBoard, 2));
-	  //write_serial_in_parallel_out_register_minus_red(rowToBinary(dotMatrixBoard, 2));
+	  write_serial_in_parallel_out_register_minus_yellow(rowToBinary(dotMatrixBoard_yellow, 2));
+	  write_serial_in_parallel_out_register_minus_red(rowToBinary(dotMatrixBoard_red, 2));
 	  LL_mDelay(1);
 	  //row:3
 	  write_serial_in_parallel_out_register_plus(0b00010000);
-	  write_serial_in_parallel_out_register_minus_yellow(rowToBinary(dotMatrixBoard, 3));
-	  //write_serial_in_parallel_out_register_minus_red(rowToBinary(dotMatrixBoard, 3));
+	  write_serial_in_parallel_out_register_minus_yellow(rowToBinary(dotMatrixBoard_yellow, 3));
+	  write_serial_in_parallel_out_register_minus_red(rowToBinary(dotMatrixBoard_red, 3));
 	  LL_mDelay(1);
 	  //row:4
 	  write_serial_in_parallel_out_register_plus(0b00001000);
-	  write_serial_in_parallel_out_register_minus_yellow(rowToBinary(dotMatrixBoard, 4));
-	  //write_serial_in_parallel_out_register_minus_red(rowToBinary(dotMatrixBoard, 4));
+	  write_serial_in_parallel_out_register_minus_yellow(rowToBinary(dotMatrixBoard_yellow, 4));
+	  write_serial_in_parallel_out_register_minus_red(rowToBinary(dotMatrixBoard_red, 4));
 	  LL_mDelay(1);
 	  //row:5
 	  write_serial_in_parallel_out_register_plus(0b00000100);
-	  write_serial_in_parallel_out_register_minus_yellow(rowToBinary(dotMatrixBoard, 5));
-	  //write_serial_in_parallel_out_register_minus_red(rowToBinary(dotMatrixBoard, 5));
+	  write_serial_in_parallel_out_register_minus_yellow(rowToBinary(dotMatrixBoard_yellow, 5));
+	  write_serial_in_parallel_out_register_minus_red(rowToBinary(dotMatrixBoard_red, 5));
 	  LL_mDelay(1);
 	  //row:6
 	  write_serial_in_parallel_out_register_plus(0b00000010);
-	  write_serial_in_parallel_out_register_minus_yellow(rowToBinary(dotMatrixBoard, 6));
-	  //write_serial_in_parallel_out_register_minus_red(rowToBinary(dotMatrixBoard, 6));
+	  write_serial_in_parallel_out_register_minus_yellow(rowToBinary(dotMatrixBoard_yellow, 6));
+	  write_serial_in_parallel_out_register_minus_red(rowToBinary(dotMatrixBoard_red, 6));
 	  LL_mDelay(1);
 	  //row:7
 	  write_serial_in_parallel_out_register_plus(0b00000001);
-	  write_serial_in_parallel_out_register_minus_yellow(rowToBinary(dotMatrixBoard, 7));
-	  //write_serial_in_parallel_out_register_minus_red(rowToBinary(dotMatrixBoard, 7));
+	  write_serial_in_parallel_out_register_minus_yellow(rowToBinary(dotMatrixBoard_yellow, 7));
+	  write_serial_in_parallel_out_register_minus_red(rowToBinary(dotMatrixBoard_red, 7));
 	  LL_mDelay(1);
 
 
@@ -344,14 +345,15 @@ static void MX_USART2_UART_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
+  LL_EXTI_InitTypeDef EXTI_InitStruct = {0};
   LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
 /* USER CODE BEGIN MX_GPIO_Init_1 */
 /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
   LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOA);
-  LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOB);
   LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOC);
+  LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOB);
 
   /**/
   LL_GPIO_ResetOutputPin(GPIOA, MR_3_Pin|MR_2_Pin|DSA_3_Pin|DSA_1_Pin);
@@ -382,6 +384,23 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
   GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
   LL_GPIO_Init(CP_3_GPIO_Port, &GPIO_InitStruct);
+
+  /**/
+  LL_GPIO_AF_SetEXTISource(LL_GPIO_AF_EXTI_PORTC, LL_GPIO_AF_EXTI_LINE4);
+
+  /**/
+  EXTI_InitStruct.Line_0_31 = LL_EXTI_LINE_4;
+  EXTI_InitStruct.LineCommand = ENABLE;
+  EXTI_InitStruct.Mode = LL_EXTI_MODE_IT;
+  EXTI_InitStruct.Trigger = LL_EXTI_TRIGGER_FALLING;
+  LL_EXTI_Init(&EXTI_InitStruct);
+
+  /**/
+  LL_GPIO_SetPinMode(tact_switch_GPIO_Port, tact_switch_Pin, LL_GPIO_MODE_FLOATING);
+
+  /* EXTI interrupt init*/
+  NVIC_SetPriority(EXTI4_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),0, 0));
+  NVIC_EnableIRQ(EXTI4_IRQn);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
@@ -1250,7 +1269,6 @@ void write_serial_in_parallel_out_register_minus_red(unsigned char data){
 
 }
 
-
 unsigned char rowToBinary(unsigned char (*ptr)[8], int row) {
 	unsigned char binaryValue = 0;
 	for (int col = 0; col < COLS; col++) {
@@ -1260,6 +1278,158 @@ unsigned char rowToBinary(unsigned char (*ptr)[8], int row) {
 
 	return binaryValue;
 }
+
+void findCommonOnes(unsigned char(*board1)[COLS], unsigned char(*board2)[COLS], int rows, int cols) {
+	//int orangeNowRow, orangeNowCol;
+    // Iterating through the arrays to find the common positions with 1.
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            if (board1[i][j] == 1 && board2[i][j] == 1) {
+            	//orangeNowRow = i;
+            	//orangeNowCol = j;
+            	//Task1//
+				if(next_yellow_yes == 1 || next_red_yes == 1){
+					if(next_red_yes==1){
+						board1[i][j]=0;
+						board2[i][j]=1;
+					}
+					else{
+						if(next_yellow_yes==1){
+							board1[i][j]=1;
+							board2[i][j]=0;
+						}
+				//Task1 end//
+					}
+					//Task2//
+					//if next point is yellow or red?//
+					if(j==7){
+						//if next point is yellow?//
+						if( board1[(i+1)%8][(j+1)%8] == 1 && board2[(i+1)%8][(j+1)%8] == 0 ){
+							next_yellow_yes=1;
+							next_red_yes=0;
+						}
+						else{
+							//if next point is red?//
+							if( board1[(i+1)%8][(j+1)%8] == 0 && board2[(i+1)%8][(j+1)%8] == 1 ){
+								next_yellow_yes=0;
+								next_red_yes=1;
+							}
+							//nothing//
+							else{
+								next_yellow_yes=0;
+								next_red_yes=0;
+							}
+						}
+					}
+					else{
+						if( (board1[i][(j+1)%8] == 1 && board2[i][(j+1)%8] == 0) || (board1[i][(j+1)%8] == 0 && board2[i][(j+1)%8] == 1)){
+							//if next point is yellow?//
+							if( board1[i][(j+1)%8] == 1 && board2[i][(j+1)%8] == 0 ){
+								next_yellow_yes=1;
+								next_red_yes=0;
+							}
+							else{
+								//if next point is red?//
+								if( board1[i][(j+1)%8] == 0 && board2[i][(j+1)%8] == 1 ){
+									next_yellow_yes=0;
+									next_red_yes=1;
+								}
+							}
+
+
+						}
+						//nothing//
+						else{
+							next_yellow_yes=0;
+							next_red_yes=0;
+						}
+					}
+
+					//Task2 end//
+					//Task3//
+					//apply orange color//
+					if(j==7){
+						board1[(i+1)%8][(j+1)%8]=1;
+						board2[(i+1)%8][(j+1)%8]=1;
+					}
+					else{
+						board1[i][(j+1)%8]=1;
+						board2[i][(j+1)%8]=1;
+					}
+					//Task3 end//
+				}
+				else{
+					//task1//
+					board1[i][j]=0;
+					board2[i][j]=0;
+					//Task1 end//
+					//Task2//
+					//if next point is yellow or red?//
+					//if next point is yellow or red?//
+					if(j==7){
+						//if next point is yellow?//
+						if( board1[(i+1)%8][(j+1)%8] == 1 && board2[(i+1)%8][(j+1)%8] == 0 ){
+							next_yellow_yes=1;
+							next_red_yes=0;
+						}
+						else{
+							//if next point is red?//
+							if( board1[(i+1)%8][(j+1)%8] == 0 && board2[(i+1)%8][(j+1)%8] == 1 ){
+								next_yellow_yes=0;
+								next_red_yes=1;
+							}
+							//nothing//
+							else{
+								next_yellow_yes=0;
+								next_red_yes=0;
+							}
+						}
+					}
+					else{
+						if( (board1[i][(j+1)%8] == 1 && board2[i][(j+1)%8] == 0) || (board1[i][(j+1)%8] == 0 && board2[i][(j+1)%8] == 1)){
+							//if next point is yellow?//
+							if( board1[i][(j+1)%8] == 1 && board2[i][(j+1)%8] == 0 ){
+								next_yellow_yes=1;
+								next_red_yes=0;
+							}
+							else{
+								//if next point is red?//
+								if( board1[i][(j+1)%8] == 0 && board2[i][(j+1)%8] == 1 ){
+									next_yellow_yes=0;
+									next_red_yes=1;
+								}
+							}
+
+
+						}
+						//nothing//
+						else{
+							next_yellow_yes=0;
+							next_red_yes=0;
+						}
+					}
+					//Task2 end//
+					//Task3//
+					//apply orange color//
+					if(j==7){
+						board1[(i+1)%8][(j+1)%8]=1;
+						board2[(i+1)%8][(j+1)%8]=1;
+					}
+					else{
+						board1[i][(j+1)%8]=1;
+						board2[i][(j+1)%8]=1;
+					}
+					//Task3 end//
+				}
+
+				return;
+            }
+        }
+    }
+
+}
+
+
 
 
 static void inline delay_us(unsigned int delay){

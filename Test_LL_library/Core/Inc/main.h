@@ -45,17 +45,21 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+//#include "stm32f1xx_it.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
+#define bitRead(value, bit) (((value) >> (bit)) & 0x01)
+#define ROWS 8
+#define COLS 8
 
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-
+extern unsigned char dotMatrixBoard_yellow[ROWS][COLS];
+extern unsigned char dotMatrixBoard_red[ROWS][COLS];
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
@@ -67,12 +71,27 @@ extern "C" {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-
+void led_blink_example_code(void);
+void UART2_TX_string(char* str);
+static void inline delay_us(unsigned int delay);
+void write_serial_in_parallel_out_register_plus(unsigned char data);
+void write_serial_in_parallel_out_register_minus_yellow(unsigned char data);
+void write_serial_in_parallel_out_register_minus_red(unsigned char data);
+unsigned char rowToBinary(unsigned char (*ptr)[8], int row);
+void findCommonOnes(unsigned char(*board1)[COLS], unsigned char(*board2)[COLS], int rows, int cols);
+void led_serial_in_parallel_out_example_1(void);
+void heart_example_1(void);
+void heart_example_2(void);
+void heart_example_3(void);
+void heart_example_4(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
 #define MR_3_Pin LL_GPIO_PIN_7
 #define MR_3_GPIO_Port GPIOA
+#define tact_switch_Pin LL_GPIO_PIN_4
+#define tact_switch_GPIO_Port GPIOC
+#define tact_switch_EXTI_IRQn EXTI4_IRQn
 #define CP_2_Pin LL_GPIO_PIN_10
 #define CP_2_GPIO_Port GPIOB
 #define DSA_2_Pin LL_GPIO_PIN_14
